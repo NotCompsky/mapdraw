@@ -39,14 +39,15 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
     
-    parser_inputs = parser.add_mutually_exclusive_group()
+    parser_inputs = parser.add_mutually_exclusive_group(required=True)
     parser_inputs.add_argument('--csv', help="Path to 'csv' data file of country to value, where entries are delineated by commas")
     parser_inputs.add_argument('--txt', help="Path to text file of countries, whose values will be entered interactively")
     
     parser.add_argument("--cl", type=int, default=1)
     
-    parser.add_argument('--write-template', help='Write template country2rgb.csv to the specified path')
-    parser.add_argument('--out', help='Path to resulting image file')
+    parser.add_argument('--write-template', help='[Debug tool] Write template country2rgb.csv to the specified path')
+    
+    parser.add_argument('--out', required=True, help='Path to resulting SVG image file')
     args = parser.parse_args()
     
     # Test colour scheme
@@ -55,8 +56,7 @@ if __name__ == "__main__":
     try:
         country_codes = re.findall('<(g|path)[^>]* id="([a-z]{2})"[^>]*>(\n *)?<title.*\n *id=[^>]+>([^<]+)<', open("res/BlankMap-World-Microstates.svg").read())
     except FileNotFoundError:
-        print("Please download 'https://commons.wikimedia.org/wiki/File:BlankMap-World-Microstates.svg' and save it under the 'res' folder")
-        raise
+        raise Exception("Please download 'https://commons.wikimedia.org/wiki/File:BlankMap-World-Microstates.svg' and save it under the 'res' folder")
     
     country_codes = [(x[1], x[3]) for x in country_codes]
 
