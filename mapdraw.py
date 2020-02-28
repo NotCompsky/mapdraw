@@ -36,6 +36,7 @@ def rtree(node, fnct):
 
 if __name__ == "__main__":
     import argparse
+    import math
     
     parser = argparse.ArgumentParser()
     
@@ -51,7 +52,14 @@ if __name__ == "__main__":
 
     parser.add_argument("--ignore", "-i", action="store_true", default=False, help="Warn, rather than fail, on errors")
 
+    parser.add_argument("--scale", default="linear", help="linear or log")
+
     args = parser.parse_args()
+
+    def get_val(f:float):
+        if args.scale == "log":
+            return math.log(f)
+        return f
     
     # Test colour scheme
     intensity2rgb(0)
@@ -80,9 +88,9 @@ if __name__ == "__main__":
     elif args.txt is None:
         country2intensities = [x.split('\t') for x in open(args.csv).read().split('\n') if x != "" and x[0] != ""]
         _values:list = [float(y) for _, y in country2intensities]
-        _max:int = max(_values)
-        _min:int = min(_values)
-        country2intensity   = {nickname2country.get(x, x):(float(y) - _min)/(_max - _min) for x,y in country2intensities}
+        _max:int = get_val(max(_values))
+        _min:int = get_val(min(_values))
+        country2intensity   = {nickname2country.get(x, x):(get_val(float(y)) - _min)/(_max - _min) for x,y in country2intensities}
     else:
         country2intensity = {}
         with open("country2intensity.backup.csv", "w") as f:
