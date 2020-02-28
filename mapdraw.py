@@ -48,6 +48,9 @@ if __name__ == "__main__":
     parser.add_argument('--write-template', help='[Debug tool] Write template country2rgb.csv to the specified path')
     
     parser.add_argument('--out', required=True, help='Path to resulting SVG image file')
+
+    parser.add_argument("--ignore", "-i", action="store_true", default=False, help="Warn, rather than fail, on errors")
+
     args = parser.parse_args()
     
     # Test colour scheme
@@ -74,8 +77,11 @@ if __name__ == "__main__":
                 f.write(f"{name}\t\n")
         exit()
     elif args.txt is None:
-        country2intensities = [x.split('\t') for x in open(args.csv).read().split('\n') if x != ""]
-        country2intensity   = {nickname2country.get(x, x):float(y) for x,y in country2intensities if y != ""}
+        country2intensities = [x.split('\t') for x in open(args.csv).read().split('\n') if x != "" and x[0] != ""]
+        _values:list = [float(y) for _, y in country2intensities]
+        _max:int = max(_values)
+        _min:int = min(_values)
+        country2intensity   = {nickname2country.get(x, x):(float(y) - _min)/(_max - _min) for x,y in country2intensities}
     else:
         country2intensity = {}
         with open("country2intensity.backup.csv", "w") as f:
@@ -88,7 +94,14 @@ if __name__ == "__main__":
                 country2intensity[country] = float(s)
                 f.write(f"{country}\t{s}\n")
     
-    code2rgb            = {country2code[x]:intensity2rgb(y) for x,y in country2intensity.items()}
+    code2rgb:dict = {}
+    for country_name, country_intensity in country2intensity.items():
+        if country_name not in country2code:
+            if args.ignore:
+                print(f"No country code for: {country_name}")
+                continue
+            raise Exception(f"No country code for: {country_name}")
+        code2rgb[country2code[country_name]] = intensity2rgb(country_intensity)
 
     tree = lxml.etree.parse('res/BlankMap-World-Microstates.svg')
     root = tree.getroot()
