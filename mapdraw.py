@@ -62,6 +62,7 @@ if __name__ == "__main__":
         raise Exception("Please download 'https://commons.wikimedia.org/wiki/File:BlankMap-World-Microstates.svg' and save it under the 'res' folder")
     
     country_codes = [(x[1], x[3]) for x in country_codes]
+    # country_codes += [("no","Norway"), ("fi","Finland"), ("gr","Greece"), ("es","Spain")] # Has no effect. Map is bad and needs editing. TODO: Check licensing of map etc. and prepare for it to become part of repo.
 
     country2code = {y:x for x,y in country_codes}
     code2country = {x:y for x,y in country_codes}
