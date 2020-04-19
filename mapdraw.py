@@ -74,6 +74,18 @@ if __name__ == "__main__":
 
     country2code = {y:x for x,y in country_codes}
     code2country = {x:y for x,y in country_codes}
+    country2code["Finland"] = "fi"
+    country2code["Greece"] = "gr"
+    country2code["Norway"] = "no"
+    country2code["Spain"] = "es"
+    
+    country2code["United States"] = "us"
+    country2code["Turkey"] = "tr"
+    country2code["Serbia"] = "rs"
+    country2code["Czech Republic"] = "cz"
+    
+    country2code["Kyrgyz Republic"] = "??"
+    country2code["Bosnia and Herzegovina"] = "ba"
     
     nickname2country = {}
     for tpl in [x.split('\t') for x in open('data/nicknames.csv').read().split('\n') if x != ""]:
