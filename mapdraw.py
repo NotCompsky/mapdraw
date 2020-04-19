@@ -87,6 +87,13 @@ if __name__ == "__main__":
     country2code["Kyrgyz Republic"] = "??"
     country2code["Bosnia and Herzegovina"] = "ba"
     
+    country2code["KEY1"] = "_1"
+    country2code["KEY2"] = "_2"
+    country2code["KEY3"] = "_3"
+    country2code["KEY4"] = "_4"
+    country2code["KEY5"] = "_5"
+    country2code["KEY6"] = "_6"
+    
     nickname2country = {}
     for tpl in [x.split('\t') for x in open('data/nicknames.csv').read().split('\n') if x != ""]:
         for nickname in tpl:
